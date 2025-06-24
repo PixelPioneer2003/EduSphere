@@ -68,6 +68,7 @@ model Chapter {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // @@unique([id, courseId]) // Composite unique constraint
   @@index([courseId])
 }
 
