@@ -41,7 +41,7 @@ export async function PATCH(
         isPublished: true,
       }
     });
-
+   // if these is the last chapter in the course, set course to unpublished
     if (!publishedChaptersInCourse.length) {
       await db.course.update({
         where: {
