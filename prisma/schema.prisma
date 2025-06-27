@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../lib/generated/prisma"
+  previewFeatures = ["fullTextSearchPostgres", "driverAdapters"]
 }
 
 datasource db {
@@ -25,6 +26,7 @@ model Course {
   purchases   Purchase[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  // @@fulltext([title])
 
   @@index([categoryId])
 }
@@ -93,6 +95,7 @@ model UserProgress {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([chapterId])
   @@index([userId, chapterId])
 }
 
@@ -106,7 +109,7 @@ model Purchase {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // @@unique([userId, courseId])
+  @@unique([userId, courseId])
   @@index([courseId])
 }
 
