@@ -9,13 +9,14 @@ import { ChapterDescriptionForm } from "./_components/chapter-description-form";
 import { ChapterAccessForm } from "./_components/chapter-access-form";
 import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
-// import { fetchUserData } from "@/app/(dashboard)/(routes)/(root)/page";
 import { auth } from "@clerk/nextjs/server";
-const ChapterIdPage = async ({
-  params
-}: {
-  params: { courseId: string; chapterId: string }
-}) => {
+
+const ChapterIdPage = async (
+  props: { params: { courseId: string; chapterId: string } }
+) => {
+
+  const { params } = await props;
+
   const { userId } = await auth();
 
   if (!userId) {
@@ -25,7 +26,7 @@ const ChapterIdPage = async ({
   const chapter = await db.chapter.findUnique({
     where: {
       id: params.chapterId,
-      courseId: params.courseId
+      courseId: params.courseId,
     },
     include: {
       muxData: true,
@@ -33,7 +34,7 @@ const ChapterIdPage = async ({
   });
 
   if (!chapter) {
-    return redirect("/search")
+    return redirect("/search");
   }
 
   const requiredFields = [
@@ -46,7 +47,6 @@ const ChapterIdPage = async ({
   const completedFields = requiredFields.filter(Boolean).length;
 
   const completionText = `(${completedFields}/${totalFields})`;
-
   const isComplete = requiredFields.every(Boolean);
 
   return (
@@ -69,9 +69,7 @@ const ChapterIdPage = async ({
             </Link>
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col gap-y-2">
-                <h1 className="text-2xl font-medium">
-                  Chapter Creation
-                </h1>
+                <h1 className="text-2xl font-medium">Chapter Creation</h1>
                 <span className="text-sm text-slate-700">
                   Complete all fields {completionText}
                 </span>
@@ -90,9 +88,7 @@ const ChapterIdPage = async ({
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={LayoutDashboard} />
-                <h2 className="text-xl">
-                  Customize your chapter
-                </h2>
+                <h2 className="text-xl">Customize your chapter</h2>
               </div>
               <ChapterTitleForm
                 initialData={chapter}
@@ -108,9 +104,7 @@ const ChapterIdPage = async ({
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={Eye} />
-                <h2 className="text-xl">
-                  Access Settings
-                </h2>
+                <h2 className="text-xl">Access Settings</h2>
               </div>
               <ChapterAccessForm
                 initialData={chapter}
@@ -122,9 +116,7 @@ const ChapterIdPage = async ({
           <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={Video} />
-              <h2 className="text-xl">
-                Add a video
-              </h2>
+              <h2 className="text-xl">Add a video</h2>
             </div>
             <ChapterVideoForm
               initialData={chapter}
@@ -135,7 +127,7 @@ const ChapterIdPage = async ({
         </div>
       </div>
     </>
-   );
-}
- 
+  );
+};
+
 export default ChapterIdPage;

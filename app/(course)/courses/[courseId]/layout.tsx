@@ -1,4 +1,3 @@
-
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
@@ -7,16 +6,17 @@ import { getProgress } from "@/actions/get-progess";
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
 import { auth } from "@clerk/nextjs/server";
+
 const CourseLayout = async ({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { courseId: string };
+  params: Promise<{ courseId: string }>;
 }) => {
-  // Await the result of fetchUserData to get the actual user data
-  const userData = await  auth();
-  const { userId } = userData;
+
+  const { courseId } = await params;
+  const { userId } = await auth();
 
   console.log('layout', userId);
 
@@ -26,7 +26,7 @@ const CourseLayout = async ({
 
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
+      id: courseId,
     },
     include: {
       chapters: {
