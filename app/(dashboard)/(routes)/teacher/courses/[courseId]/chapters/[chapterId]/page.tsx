@@ -19,7 +19,7 @@ const ChapterIdPage = async ({
   const { userId } = await auth();
 
   if (!userId) {
-    return redirect("/search");
+    return redirect("/");
   }
 
   const chapter = await db.chapter.findUnique({

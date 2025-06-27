@@ -21,7 +21,7 @@ const SearchPage = async ({
   const {userId} = await auth();
 
   if (!userId) {
-    return redirect("/search");
+    return redirect("/");
   }
 
   const categories = await db.category.findMany({

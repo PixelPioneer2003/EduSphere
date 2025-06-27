@@ -21,7 +21,7 @@ const CourseLayout = async ({
   console.log('layout', userId);
 
   if (!userId) {
-    return redirect("/search");
+    return redirect("/");
   }
 
   const course = await db.course.findUnique({

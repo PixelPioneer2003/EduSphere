@@ -23,7 +23,7 @@ export const CourseSidebar = async ({
   const { userId } = await auth();
 
   if (!userId) {
-    return redirect("/search");
+    return redirect("/");
   }
 
   const purchase = await db.purchase.findUnique({
@@ -41,14 +41,14 @@ export const CourseSidebar = async ({
         <h1 className="font-semibold">
           {course.title}
         </h1>
-        {/* {purchase && (
+        {purchase && (
           <div className="mt-10">
             <CourseProgress
               variant="success"
               value={progressCount}
             />
           </div>
-        )} */}
+        )}
       </div>
       <div className="flex flex-col w-full">
         {course.chapters.map((chapter) => (
