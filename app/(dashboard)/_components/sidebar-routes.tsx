@@ -49,3 +49,4 @@ export const SidebarRoutes = () => {
     </div>
   );
 };
+

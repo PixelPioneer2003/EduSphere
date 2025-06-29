@@ -50,3 +50,4 @@ export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
     </button>
   );
 };
+

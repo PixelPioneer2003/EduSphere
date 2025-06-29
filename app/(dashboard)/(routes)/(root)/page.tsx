@@ -3,12 +3,7 @@ import { CheckCircle, Clock } from "lucide-react";
 import { getDashboardCourses } from "@/actions/get-dashboard-courses";
 import { CoursesList } from "@/components/courses-list";
 import { InfoCard } from "./_components/info-card";
-import axios from 'axios';
 import { auth } from "@clerk/nextjs/server";
-
-export const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}`,
-});
 
 
 export default async function Dashboard() {
@@ -44,3 +39,4 @@ export default async function Dashboard() {
     </div>
   )
 }
+

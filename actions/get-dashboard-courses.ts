@@ -1,7 +1,7 @@
-import { Category, Chapter, Course } from "@prisma/client";
+import { Category, Chapter, Course } from "@/lib/generated/prisma";
 
 import { db } from "@/lib/db";
-import { getProgress } from "@/actions/get-progess";
+import { getProgress } from "@/actions/get-progess"
 
 type CourseWithProgressWithCategory = Course & {
   category: Category;
@@ -34,7 +34,7 @@ export const getDashboardCourses = async (userId: string): Promise<DashboardCour
       }
     });
 
-    const courses = purchasedCourses.map((purchase) => purchase.course) as CourseWithProgressWithCategory[];
+    const courses = purchasedCourses.map((purchase : any) => purchase.course) as CourseWithProgressWithCategory[];
 
     for (let course of courses) {
       const progress = await getProgress(userId, course.id);

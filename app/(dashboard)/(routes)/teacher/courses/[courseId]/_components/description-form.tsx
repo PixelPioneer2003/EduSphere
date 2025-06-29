@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { Course } from "@prisma/client";
+import { Course } from "@/lib/generated/prisma";
 
 interface DescriptionFormProps {
   initialData: Course;
@@ -58,6 +58,7 @@ export const DescriptionForm = ({
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.error("Error updating course description:", error);
     }
   };
 

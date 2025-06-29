@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-// import { fetchUserData } from "@/app/(dashboard)/(routes)/(root)/page";
+
+interface Params {
+  params: Promise<{ courseId: string; chapterId: string }>;
+}
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string; chapterId: string } }
+  { params }: Params
 ) {
   try {
+    const resolvedParams = await params;
     const { userId } = await auth();
 
     if (!userId) {
@@ -16,9 +20,9 @@ export async function PATCH(
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.courseId,
-        userId
-      }
+        id: resolvedParams.courseId,
+        userId,
+      },
     });
 
     if (!ownCourse) {
@@ -27,35 +31,36 @@ export async function PATCH(
 
     const unpublishedChapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.courseId,
+        id: resolvedParams.chapterId,
+        courseId: resolvedParams.courseId,
       },
       data: {
         isPublished: false,
-      }
+      },
     });
 
     const publishedChaptersInCourse = await db.chapter.findMany({
       where: {
-        courseId: params.courseId,
+        courseId: resolvedParams.courseId,
         isPublished: true,
-      }
+      },
     });
-   // if these is the last chapter in the course, set course to unpublished
-    if (!publishedChaptersInCourse.length) {
+
+    if (publishedChaptersInCourse.length === 0) {
       await db.course.update({
         where: {
-          id: params.courseId,
+          id: resolvedParams.courseId,
         },
         data: {
           isPublished: false,
-        }
+        },
       });
     }
 
     return NextResponse.json(unpublishedChapter);
   } catch (error) {
-    console.log("[CHAPTER_UNPUBLISH]", error);
-    return new NextResponse("Internal Error", { status: 500 }); 
+    console.error("[CHAPTER_UNPUBLISH]", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
+

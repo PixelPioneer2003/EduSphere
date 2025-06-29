@@ -61,3 +61,4 @@ export const CourseSidebarItem = ({
     </button>
   )
 }
+

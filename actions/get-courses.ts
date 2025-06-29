@@ -1,8 +1,8 @@
-import { Category, Course } from "@prisma/client";
+import { Category, Course } from "@/lib/generated/prisma";
 
 import { getProgress } from "@/actions/get-progess";
 import { db } from "@/lib/db";
-//combine course and progress types with category
+
 type CourseWithProgressWithCategory = Course & {
   category: Category | null;
   chapters: { id: string }[];
@@ -51,8 +51,7 @@ export const getCourses = async ({
     });
 
     const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
-      courses.map(async course => {
-        // if course has no purchases, set progress to null
+      courses.map(async (course :any) => {
         if (course.purchases.length === 0) {
           return {
             ...course,

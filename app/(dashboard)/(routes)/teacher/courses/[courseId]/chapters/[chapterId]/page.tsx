@@ -11,12 +11,15 @@ import { ChapterVideoForm } from "./_components/chapter-video-form";
 import { ChapterActions } from "./_components/chapter-actions";
 import { auth } from "@clerk/nextjs/server";
 
-const ChapterIdPage = async (
-  props: { params: { courseId: string; chapterId: string } }
-) => {
+interface ChapterIdPageProps {
+  params: Promise<{
+    courseId: string;
+    chapterId: string;
+  }>;
+}
 
-  const { params } = await props;
-
+const ChapterIdPage = async ({ params }: ChapterIdPageProps) => {
+  const { courseId, chapterId } = await params;
   const { userId } = await auth();
 
   if (!userId) {
@@ -25,8 +28,8 @@ const ChapterIdPage = async (
 
   const chapter = await db.chapter.findUnique({
     where: {
-      id: params.chapterId,
-      courseId: params.courseId,
+      id: chapterId,
+      courseId: courseId,
     },
     include: {
       muxData: true,
@@ -37,15 +40,9 @@ const ChapterIdPage = async (
     return redirect("/search");
   }
 
-  const requiredFields = [
-    chapter.title,
-    chapter.description,
-    chapter.videoUrl,
-  ];
-
+  const requiredFields = [chapter.title, chapter.description, chapter.videoUrl];
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
-
   const completionText = `(${completedFields}/${totalFields})`;
   const isComplete = requiredFields.every(Boolean);
 
@@ -61,7 +58,7 @@ const ChapterIdPage = async (
         <div className="flex items-center justify-between">
           <div className="w-full">
             <Link
-              href={`/teacher/courses/${params.courseId}`}
+              href={`/teacher/courses/${courseId}`}
               className="flex items-center text-sm hover:opacity-75 transition mb-6"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -76,13 +73,14 @@ const ChapterIdPage = async (
               </div>
               <ChapterActions
                 disabled={!isComplete}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
                 isPublished={chapter.isPublished}
               />
             </div>
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           <div className="space-y-4">
             <div>
@@ -92,15 +90,16 @@ const ChapterIdPage = async (
               </div>
               <ChapterTitleForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
               <ChapterDescriptionForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
             </div>
+
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={Eye} />
@@ -108,11 +107,12 @@ const ChapterIdPage = async (
               </div>
               <ChapterAccessForm
                 initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
+                courseId={courseId}
+                chapterId={chapterId}
               />
             </div>
           </div>
+
           <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={Video} />
@@ -120,8 +120,8 @@ const ChapterIdPage = async (
             </div>
             <ChapterVideoForm
               initialData={chapter}
-              chapterId={params.chapterId}
-              courseId={params.courseId}
+              chapterId={chapterId}
+              courseId={courseId}
             />
           </div>
         </div>
@@ -131,3 +131,4 @@ const ChapterIdPage = async (
 };
 
 export default ChapterIdPage;
+

@@ -5,18 +5,26 @@ import { getChapter } from "@/actions/get-chapter";
 import { Banner } from "@/components/banner";
 import { Separator } from "@/components/ui/separator";
 import { Preview } from "@/components/preview";
+
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
 import { CourseProgressButton } from "./_components/course-progress-button";
 import { auth } from "@clerk/nextjs/server";
 
-const ChapterIdPage = async (props: Promise<{ params: { courseId: string; chapterId: string } }>) => {
-  
-  const { params } = await props;
+// Type definition with params as Promise
+interface PageProps {
+  params: Promise<{
+    courseId: string;
+    chapterId: string;
+  }>;
+}
+
+const ChapterIdPage = async ({ params }: PageProps) => {
+  const { courseId, chapterId } = await params;
   const { userId } = await auth();
 
   if (!userId) {
-    return redirect("/");
+    return redirect("/search");
   }
 
   const {
@@ -29,8 +37,8 @@ const ChapterIdPage = async (props: Promise<{ params: { courseId: string; chapte
     purchase,
   } = await getChapter({
     userId,
-    chapterId: params.chapterId,
-    courseId: params.courseId,
+    chapterId,
+    courseId,
   });
 
   if (!chapter || !course) {
@@ -46,14 +54,17 @@ const ChapterIdPage = async (props: Promise<{ params: { courseId: string; chapte
         <Banner variant="success" label="You already completed this chapter." />
       )}
       {isLocked && (
-        <Banner variant="warning" label="You need to purchase this course to watch this chapter." />
+        <Banner
+          variant="warning"
+          label="You need to purchase this course to watch this chapter."
+        />
       )}
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4">
           <VideoPlayer
-            chapterId={params.chapterId}
+            chapterId={chapterId}
             title={chapter.title}
-            courseId={params.courseId}
+            courseId={courseId}
             nextChapterId={nextChapter?.id}
             playbackId={muxData?.playbackId!}
             isLocked={isLocked}
@@ -65,13 +76,13 @@ const ChapterIdPage = async (props: Promise<{ params: { courseId: string; chapte
             <h2 className="text-2xl font-semibold mb-2">{chapter.title}</h2>
             {purchase ? (
               <CourseProgressButton
-                chapterId={params.chapterId}
-                courseId={params.courseId}
+                chapterId={chapterId}
+                courseId={courseId}
                 nextChapterId={nextChapter?.id}
                 isCompleted={!!userProgress?.isCompleted}
               />
             ) : (
-              <CourseEnrollButton courseId={params.courseId} price={course.price!} />
+              <CourseEnrollButton courseId={courseId} price={course.price!} />
             )}
           </div>
           <Separator />
@@ -103,3 +114,4 @@ const ChapterIdPage = async (props: Promise<{ params: { courseId: string; chapte
 };
 
 export default ChapterIdPage;
+

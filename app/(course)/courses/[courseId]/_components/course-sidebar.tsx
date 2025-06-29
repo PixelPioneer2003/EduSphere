@@ -1,4 +1,4 @@
-import { Chapter, Course, UserProgress } from "@prisma/client"
+import { Chapter, Course, UserProgress } from "@/lib/generated/prisma"
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";

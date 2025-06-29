@@ -53,6 +53,7 @@ export const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.error("Error updating course title:", error);
     }
   };
 

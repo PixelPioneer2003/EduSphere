@@ -1,11 +1,11 @@
 "use client";
 import * as z from "zod";
 import axios from "axios";
-import { Pencil, PlusCircle, ImageIcon, File, Loader2, X } from "lucide-react";
+import {  PlusCircle,File, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Attachment, Course } from "@prisma/client";
+import { Attachment, Course } from "@/lib/generated/prisma";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";

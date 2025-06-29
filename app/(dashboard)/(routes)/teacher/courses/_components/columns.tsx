@@ -1,6 +1,6 @@
 "use client"
 
-import { Course } from "@prisma/client"
+import { Course } from "@/lib/generated/prisma"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react"
 import Link from "next/link";
@@ -45,10 +45,13 @@ export const columns: ColumnDef<Course>[] = [
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price") || "0");
-      const formatted = new Intl.NumberFormat("en-US", {
+      const formatted = new Intl.NumberFormat("en-IN", {
         style: "currency",
-        currency: "USD"
-      }).format(price);
+        currency: "INR",
+            }).format(price);
+      
+      console.log(formatted); 
+      
 
       return <div>{formatted}</div>
     }
@@ -105,3 +108,4 @@ export const columns: ColumnDef<Course>[] = [
     }
   }
 ]
+

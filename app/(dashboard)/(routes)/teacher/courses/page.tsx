@@ -30,3 +30,4 @@ const CoursesPage = async () => {
 }
  
 export default CoursesPage;
+

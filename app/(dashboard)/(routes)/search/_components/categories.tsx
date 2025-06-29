@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "@prisma/client";
+import { Category } from "@/lib/generated/prisma";
 import {
   FcEngineering,
   FcFilmReel,
@@ -52,3 +52,4 @@ export const Categories = ({
     </div>
   );
 };
+

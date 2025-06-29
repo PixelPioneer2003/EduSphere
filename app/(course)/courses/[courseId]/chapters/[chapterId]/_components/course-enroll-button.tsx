@@ -63,6 +63,7 @@ export const CourseEnrollButton = ({
 
     } catch (error) {
       toast.error("Something went wrong");
+      console.error("Payment error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -84,3 +85,4 @@ export const CourseEnrollButton = ({
     </>
   );
 };
+

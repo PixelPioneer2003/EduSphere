@@ -13,3 +13,4 @@ export async function GET(req: NextRequest) {
 
   return new Response(`Hello, user ${userId}`);
 }
+

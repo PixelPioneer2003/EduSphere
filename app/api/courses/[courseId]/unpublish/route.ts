@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
-import {auth}  from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-// import { fetchUserData } from "@/app/(dashboard)/(routes)/(root)/page";
+
+interface Params {
+  params: Promise<{ courseId: string }>;
+}
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string } }
+  { params }: Params
 ) {
   try {
+    const resolvedParams = await params;
     const { userId } = await auth();
 
     if (!userId) {
@@ -16,7 +20,7 @@ export async function PATCH(
 
     const course = await db.course.findUnique({
       where: {
-        id: params.courseId,
+        id: resolvedParams.courseId,
         userId,
       },
     });
@@ -27,17 +31,18 @@ export async function PATCH(
 
     const unpublishedCourse = await db.course.update({
       where: {
-        id: params.courseId,
+        id: resolvedParams.courseId,
         userId,
       },
       data: {
         isPublished: false,
-      }
+      },
     });
 
     return NextResponse.json(unpublishedCourse);
   } catch (error) {
     console.log("[COURSE_ID_UNPUBLISH]", error);
     return new NextResponse("Internal Error", { status: 500 });
-  } 
+  }
 }
+

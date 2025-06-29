@@ -40,3 +40,4 @@ const AnalyticsPage = async () => {
 }
  
 export default AnalyticsPage;
+

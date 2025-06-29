@@ -1,12 +1,11 @@
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-// First chapter of the course will be selected by default using this code
-const CourseIdPage = async ({
-  params,
-}: {
+interface PageProps {
   params: Promise<{ courseId: string }>;
-}) => {
+}
+
+const CourseIdPage = async ({ params }: PageProps) => {
   const { courseId } = await params;
 
   const course = await db.course.findUnique({
@@ -33,3 +32,4 @@ const CourseIdPage = async ({
 };
 
 export default CourseIdPage;
+

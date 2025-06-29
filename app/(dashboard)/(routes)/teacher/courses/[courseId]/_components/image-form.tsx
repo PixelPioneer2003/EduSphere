@@ -10,7 +10,7 @@ import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Course } from "@prisma/client";
+import { Course } from "@/lib/generated/prisma";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
 
@@ -38,7 +38,6 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -48,6 +47,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong.");
+      console.error("Error updating course image:", error);
     }
   };
 

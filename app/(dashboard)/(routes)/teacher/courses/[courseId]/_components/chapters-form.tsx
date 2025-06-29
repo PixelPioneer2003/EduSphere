@@ -4,11 +4,11 @@ import * as z from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Pencil, PlusCircle,Loader2 } from "lucide-react";
+import { PlusCircle,Loader2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Chapter,Course } from "@prisma/client";
+import { Chapter,Course } from "@/lib/generated/prisma";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ChaptersList } from "./chapters-list";
 interface ChaptersFormProps {
   initialData: Course  & { chapters : Chapter[] };

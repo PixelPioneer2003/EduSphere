@@ -1,24 +1,21 @@
 import { redirect } from "next/navigation";
-
 import { db } from "@/lib/db";
 import { getProgress } from "@/actions/get-progess";
-
 import { CourseSidebar } from "./_components/course-sidebar";
 import { CourseNavbar } from "./_components/course-navbar";
 import { auth } from "@clerk/nextjs/server";
 
-const CourseLayout = async ({
-  children,
-  params,
-}: {
+// Update params typing to Promise
+interface LayoutProps {
   children: React.ReactNode;
   params: Promise<{ courseId: string }>;
-}) => {
+}
 
+const CourseLayout = async ({ children, params }: LayoutProps) => {
   const { courseId } = await params;
   const { userId } = await auth();
 
-  console.log('layout', userId);
+  console.log("layout", userId);
 
   if (!userId) {
     return redirect("/");
@@ -67,3 +64,4 @@ const CourseLayout = async ({
 };
 
 export default CourseLayout;
+

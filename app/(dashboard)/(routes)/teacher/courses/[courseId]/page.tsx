@@ -13,10 +13,12 @@ import { ChaptersForm } from "./_components/chapters-form";
 import { Banner } from "@/components/banner";
 import { Actions } from "./_components/actions";
 
-const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) => {
-  
-  const { params } = await props;
+interface CourseIdPageProps {
+  params: Promise<{ courseId: string }>;
+}
 
+const CourseIdPage = async ({ params }: CourseIdPageProps) => {
+  const { courseId } = await params;
   const { userId } = await auth();
 
   if (!userId) {
@@ -25,8 +27,8 @@ const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) =>
 
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
-      userId
+      id: courseId,
+      userId,
     },
     include: {
       chapters: {
@@ -58,7 +60,7 @@ const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) =>
     course.imageUrl,
     course.price,
     course.categoryId,
-    course.chapters.some(chapter => chapter.isPublished),
+    course.chapters.some((chapter : any) => chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -80,11 +82,7 @@ const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) =>
               Complete all fields {completionText}
             </span>
           </div>
-          <Actions
-            disabled={!isComplete}
-            courseId={params.courseId}
-            isPublished={course.isPublished}
-          />
+          <Actions disabled={!isComplete} courseId={courseId} isPublished={course.isPublished} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -99,7 +97,7 @@ const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) =>
             <CategoryForm
               initialData={course}
               courseId={course.id}
-              options={categories.map((category) => ({
+              options={categories.map((category : any ) => ({
                 label: category.name,
                 value: category.id,
               }))}
@@ -138,3 +136,4 @@ const CourseIdPage = async (props: Promise<{ params: { courseId: string } }>) =>
 };
 
 export default CourseIdPage;
+

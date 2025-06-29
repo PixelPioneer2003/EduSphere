@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
-
 import { db } from "@/lib/db";
-// import { fetchUserData } from "@/app/(dashboard)/(routes)/(root)/page";
-import {auth} from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
+
+interface Params {
+  params: Promise<{ courseId: string }>;
+}
+
 export async function PUT(
   req: Request,
-  { params }: { params: { courseId: string; } }
+  { params }: Params
 ) {
   try {
+    const resolvedParams = await params;
     const { userId } = await auth();
 
     if (!userId) {
@@ -18,9 +22,9 @@ export async function PUT(
 
     const ownCourse = await db.course.findUnique({
       where: {
-        id: params.courseId,
-        userId: userId
-      }
+        id: resolvedParams.courseId,
+        userId: userId,
+      },
     });
 
     if (!ownCourse) {
@@ -30,13 +34,14 @@ export async function PUT(
     for (let item of list) {
       await db.chapter.update({
         where: { id: item.id },
-        data: { position: item.position }
+        data: { position: item.position },
       });
     }
 
     return new NextResponse("Success", { status: 200 });
   } catch (error) {
-    console.log("[REORDER]", error);
-    return new NextResponse("Internal Error", { status: 500 }); 
+    console.error("[REORDER]", error);
+    return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
